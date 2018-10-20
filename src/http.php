@@ -227,7 +227,7 @@ async function _http_curl_multi(
 
 final class HttpMultiLimitClient {
   private static int $active_requests = 0;
-  private static int $limit = 4;
+  private static int $limit = 10;
 
   public static async function request(
     string $url,
