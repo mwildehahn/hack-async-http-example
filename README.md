@@ -1,6 +1,6 @@
 # hack-async-http-example
 
-Experiments using hack's async curl helpers
+Experiments using hack's async curl helpers. There are a couple variations on different branches.
 
 ## master
 
