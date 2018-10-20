@@ -26,7 +26,7 @@ type text_element_t = shape(
 );
 
 <<__Entrypoint>>
-function verify_elements(): void {
+function verify_elements_main(): void {
   $image_urls = vec[
     'https://nextshark-vxdsockgvw3ki.stackpathdns.com/wp-content/uploads/2015/07/hulk-pitbull-largest-puppies-11.jpg',
     'https://kittenrescue.org/wp-content/uploads/2017/03/KittenRescue_KittenCareHandbook.jpg',
@@ -73,14 +73,21 @@ function verify_elements(): void {
 
   $start = microtime_ms();
 
-  $results = \HH\Asio\join(
-    Vec\map_async($elements, async $element ==> await verify_element($element)),
-  );
-  $results = Vec\filter_nulls($results);
+  $results = \HH\Asio\join(verify_elements($elements));
 
   $took = microtime_ms() - $start;
 
   echo "Took: {$took}ms\n";
+}
+
+async function verify_elements(
+  vec<element_t> $elements,
+): Awaitable<vec<element_t>> {
+  $output = await Vec\map_async(
+    $elements,
+    async $element ==> await verify_element($element),
+  );
+  return Vec\filter_nulls($output);
 }
 
 async function verify_element(element_t $element): Awaitable<?element_t> {
@@ -100,7 +107,8 @@ async function verify_image_element(
   $options = shape('outfile' => $filename);
 
   try {
-    $response = await http_request($element['url'], dict[], $options);
+    $response =
+      await HttpMultiLimitClient::request($element['url'], dict[], $options);
   } catch (Exception $e) {
     return null;
   }

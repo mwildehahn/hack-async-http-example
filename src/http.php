@@ -224,3 +224,23 @@ async function _http_curl_multi(
   curl_multi_close($mh);
   return $results;
 }
+
+final class HttpMultiLimitClient {
+  private static int $active_requests = 0;
+  private static int $limit = 4;
+
+  public static async function request(
+    string $url,
+    dict<string, string> $headers = dict[],
+    http_options_t $options = shape(),
+  ): Awaitable<http_response_t> {
+    while (self::$active_requests > self::$limit) {
+      await \HH\Asio\later();
+    }
+
+    self::$active_requests += 1;
+    $result = await http_request($url, $headers, $options);
+    self::$active_requests -= 1;
+    return $result;
+  }
+}
