@@ -73,9 +73,8 @@ function verify_elements(): void {
 
   $start = microtime_ms();
 
-  $results = \HH\Asio\join(
-    Vec\map_async($elements, async $element ==> await verify_element($element)),
-  );
+  $results =
+    Vec\map($elements, $element ==> \HH\Asio\join(verify_element($element)));
   $results = Vec\filter_nulls($results);
 
   $took = microtime_ms() - $start;
@@ -104,6 +103,8 @@ async function verify_image_element(
   } catch (Exception $e) {
     return null;
   }
+
+  echo "processing {$element['url']}\n";
 
   $image = getimagesize($filename);
   $element['mime'] = $image['mime'];
