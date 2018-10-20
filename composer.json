@@ -1,0 +1,14 @@
+{
+  "name": "mh/hack-async-http-example",
+  "require": {
+    "hhvm/type-assert": "^3.2",
+    "hhvm/hsl": "^3.28",
+    "hhvm/hacktest": "^1.2"
+  },
+  "authors": [
+    {
+      "name": "Michael Hahn",
+      "email": "mh@slack-corp.com"
+    }
+  ]
+}
